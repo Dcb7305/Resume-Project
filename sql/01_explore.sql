@@ -1,4 +1,3 @@
-SQL
 -- 01_explore.sql
 -- Purpose: profile the raw call center data BEFORE cleaning it.
 -- Every finding here should justify a decision made in 02_clean.sql.
