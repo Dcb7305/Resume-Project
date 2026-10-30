@@ -1,3 +1,7 @@
+-- 02_clean.sql
+-- Purpose: build clean_data from Raw Data.
+-- Fixes: snake_case names, TIME fields -> whole seconds.
+-- Rows: the two WHERE filters are a safety net. 01_explore.sql found 0 bad rows, so none are dropped.
 CREATE OR REPLACE TABLE `call-center-analysis-cb.call_center.clean_data` AS
 SELECT
   `Index` AS row_id,

@@ -23,7 +23,7 @@ An end-to-end look at call center performance data: profiling and cleaning it wi
 |---|---|---|
 | 1. Explore | [`sql/01_explore.sql`](sql/01_explore.sql) | Profiles the raw data: column types, duplicates, missing values, value ranges, and logic checks |
 | 2. Clean | [`sql/02_clean.sql`](sql/02_clean.sql) | Builds a `clean_data` table: renames columns to snake_case, converts time fields to seconds, filters out invalid rows |
-| 3. Validate | [`sql/03_validate.sql`](sql/03_validate.sql) | Confirms the row count of the cleaned table |
+| 3. Validate | [`sql/03_validate.sql`](sql/03_validate.sql) | Proves the cleaned table is right: raw vs clean row counts and call totals, answered + abandoned = incoming, answer rate matches answered ÷ incoming, no nulls or duplicate IDs, time conversion spot check, value ranges |
 
 ## Data Quality Findings
 
@@ -36,6 +36,7 @@ I checked the data before trusting it, rather than assuming it was clean:
 | Missing values (all 9 columns) | 0 |
 | Rows with more calls answered than received | 0 |
 | Rows where answered + abandoned ≠ incoming | 0 |
+| Rows where answer rate ≠ answered ÷ incoming | 0 (checked against the source CSV) |
 | Rows after cleaning | 1,251 (no rows lost) |
 
 **Cleaning decisions:**
