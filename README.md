@@ -1,6 +1,6 @@
 # Call Center Performance Analysis
 
-An end-to-end look at call center performance data: profiling and cleaning it with SQL in Google BigQuery, validating the results, and preparing it for analysis in Power BI.
+An end-to-end look at call center performance data: profiling and cleaning it with SQL in Google BigQuery, validating the results, and visualizing it in Power BI.
 
 ## Tools
 
@@ -47,15 +47,26 @@ I checked the data before trusting it, rather than assuming it was clean:
 - **Answer rate** loaded as a decimal (0.553 = 55.3%), so it gets formatted as a percentage in reporting.
 - **Validation filters** for missing IDs and impossible call counts are kept in the cleaning script as a safety net, even though this dataset passed every check.
 
+## Dashboard
+
+![Call Center Performance Dashboard](Power%20BI/dashboard.png)
+
+Built in Power BI from the cleaned BigQuery table. Daily rows were grouped into 30-day periods ("months") to show trends clearly. Rates and averages are weighted by call volume, so busy days count more than quiet ones. The Power BI file and a PDF export are in the [Power BI folder](Power%20BI/).
+
+### What the dashboard shows
+
+- **Overall performance:** 248K incoming calls, an 89.1% answer rate, and a 10.9% abandon rate. Only 63.8% of calls were answered within 20 seconds, well below the common 80/20 service level target.
+- **A demand spike broke service:** Around months 27–30, monthly volume jumped from a typical 4K–6K calls to as high as ~15.6K, and service level fell to about 30%.
+- **Volume drives the big drops, but not all of them:** Service level falls sharply once monthly volume passes ~8K. At normal volume it still ranges from ~53% to ~88%, which points to other factors like staffing or handle time.
+
 ## Key Insights
 
-- **Call volume varies widely.** Incoming calls per interval range from 5 to 1,575, against an average of 198.5.
-- **There is a distinct demand spike.** The busiest rows cluster around Index 839–884, peaking at 1,575 calls, roughly 8 times the average. The totals reconcile in every row, so this is a real surge, not a data error, and it was kept in the analysis.
+- **Call volume varies widely.** Incoming calls per day range from 5 to 1,575, against an average of 198.5.
+- **There is a distinct demand spike.** The busiest rows cluster around days 839–884, peaking at 1,575 calls, roughly 8 times the average. The totals reconcile in every row, so this is a real surge, not a data error, and it was kept in the analysis.
 - **Service suffered during the spike.** Answer rates in the busiest rows dropped to about 55–60%, meaning roughly 4 in 10 callers hung up before reaching an agent.
 - **Waiting time is the pressure point.** Talk duration stayed fairly steady (about 1 to 5 minutes), but average waiting time reached as high as 25 minutes 51 seconds, which points to a capacity problem rather than a call-handling problem.
 
 ## Next Steps
 
-- Build a Power BI dashboard on the `clean_data` table
-- Compare service level and abandonment during high-volume periods against normal periods
+- Build a Tableau KPI dashboard
 - Explore staffing recommendations for demand spikes
