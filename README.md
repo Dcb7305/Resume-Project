@@ -6,11 +6,13 @@ An end-to-end look at call center performance data: profiling and cleaning it wi
 
 - **SQL** (Google BigQuery) for profiling, cleaning, and validation
 - **Git / GitHub** for version control
-- **Power BI** for dashboards and visual analysis (in progress)
+- **Power BI** for dashboards and visual analysis 
 
 ## Dataset
 
-`Call Center Data.csv`: 1,251 rows, one per reporting interval. Each row includes:
+**Source:** [Call Center Data on Kaggle](https://www.kaggle.com/datasets/satvicoder/call-center-data)
+
+`Call Center Data.csv`: 1,251 rows, one per day. Each row includes:
 
 - Incoming, answered, and abandoned call counts
 - Answer rate
