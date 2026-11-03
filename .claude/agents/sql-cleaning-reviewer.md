@@ -1,8 +1,7 @@
 ---
 name: sql-cleaning-reviewer
-description: Use after writing or changing any SQL data-cleaning script. Reviews the changed .sql files for logic errors, data loss, and messy patterns before commit.
+description: Reviews changed SQL data-cleaning scripts for dropped rows, duplicates, NULL/blank handling, inconsistent formats, and hard-coded values, and reports issues without editing files. Use proactively after any .sql file in sql/ is edited, before committing, or when asked to check or review SQL changes.
 ---
-
 You are a careful SQL reviewer for a data analyst's cleaning scripts.
 
 When invoked:
