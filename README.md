@@ -7,6 +7,7 @@ An end-to-end look at call center performance data: profiling and cleaning it wi
 - **SQL** (Google BigQuery) for profiling, cleaning, and validation
 - **Git / GitHub** for version control
 - **Power BI** for dashboards and visual analysis 
+- **Python / pytest** for automated tests of the SQL pipeline
 
 ## Dataset
 
@@ -26,6 +27,22 @@ An end-to-end look at call center performance data: profiling and cleaning it wi
 | 1. Explore | [`sql/01_explore.sql`](sql/01_explore.sql) | Profiles the raw data: column types, duplicates, missing values, value ranges, and logic checks |
 | 2. Clean | [`sql/02_clean.sql`](sql/02_clean.sql) | Builds a `clean_data` table: renames columns to snake_case, converts time fields to seconds, filters out invalid rows |
 | 3. Validate | [`sql/03_validate.sql`](sql/03_validate.sql) | Proves the cleaned table is right: raw vs clean row counts and call totals, answered + abandoned = incoming, answer rate matches answered ÷ incoming, no nulls or duplicate IDs, time conversion spot check, value ranges |
+
+## Testing
+
+The [`tests/`](tests/) folder holds 43 automated tests for the three SQL files. They run the BigQuery SQL locally on SQLite against `Call Center Data.csv`, so no BigQuery login is needed. [`tests/conftest.py`](tests/conftest.py) translates the few BigQuery-only functions (`COUNTIF`, `TIME_DIFF`, `SAFE_DIVIDE`).
+
+```
+python -m pytest tests -q
+```
+
+The tests check two things. First, that each script returns the known results on the real data. Second, that each check actually catches a problem when one is planted, such as a duplicate ID, a dropped row, or a wrong answer rate.
+
+**Gaps the tests uncovered** (none affect this dataset, which has no nulls or zero-call days):
+
+- A NULL call count makes comparisons like `answered + abandoned != incoming` come out unknown, so the logic checks skip that row and the cleaning filter silently drops it. Only the null-count checks catch it.
+- The answer-rate check in `03_validate.sql` skips days with 0 incoming calls, because `SAFE_DIVIDE` returns NULL there and `COUNTIF` ignores NULLs.
+- Validation checks 6 and 7 print values to review by eye instead of returning a pass/fail count.
 
 ## Data Quality Findings
 
