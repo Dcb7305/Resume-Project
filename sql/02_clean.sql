@@ -1,7 +1,8 @@
 -- 02_clean.sql
 -- Purpose: build clean_data from Raw Data.
 -- Fixes: snake_case names, TIME fields -> whole seconds.
--- Rows: the two WHERE filters are a safety net. 01_explore.sql found 0 bad rows, so none are dropped.
+-- Rows: the WHERE filters are a safety net. 01_explore.sql found 0 bad rows, so none are dropped.
+-- Rows with NULL Answered Calls or Incoming Calls are dropped on purpose, because answer rates can't be calculated without them. There were 0 such rows as of Nov 2026.
 CREATE OR REPLACE TABLE `call-center-analysis-cb.call_center.clean_data` AS
 SELECT
   `Index` AS row_id,
@@ -15,4 +16,6 @@ SELECT
   `Service Level _20 Seconds_` AS service_level_20s
 FROM `call-center-analysis-cb.call_center.Raw Data`
 WHERE `Index` IS NOT NULL
-  AND `Answered Calls` <= `Incoming Calls`;   -- drop impossible rows
+  AND `Answered Calls` IS NOT NULL
+  AND `Incoming Calls` IS NOT NULL
+  AND `Answered Calls` <= `Incoming Calls`;   -- drop NULL and impossible rows
